@@ -10,6 +10,7 @@ public class TheseusMovement : MonoBehaviour
     float raySize = 1f, debugDur = 1;
     GameObject moveToT, minotaur;
     float speed = 1f, step = 1f;
+    GameManager gameManager;
     void Start()
     {
         //References theseus' MoveTo Object and removes it as a child
@@ -21,6 +22,8 @@ public class TheseusMovement : MonoBehaviour
 
         //Reference to the Barriers Layer 
         mask = LayerMask.GetMask("Barriers");
+
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     }
 
     //Calls the Move method on the minotaurs movement script, sending the player's current position
@@ -33,87 +36,96 @@ public class TheseusMovement : MonoBehaviour
         // For each keyboard input, translates the MoveToObject, then it moves the sprite to that direction
         // After that it call the Move method on the minotaur
         // Casts a ray to detect with there are barriers, if there aren't any, the player moves
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (!gameManager.winBadgeUp)
         {
-            hit = Physics2D.Raycast(transform.position, Vector2.right, raySize, mask);
-            if (hit.collider != null)
+            if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                if (hit.collider.tag == "barrier")
+                hit = Physics2D.Raycast(transform.position, Vector2.right, raySize, mask);
+                if (hit.collider != null)
                 {
+                    if (hit.collider.tag == "barrier")
+                    {
+                        Debug.DrawRay(transform.position, Vector3.right * raySize, Color.green, debugDur);
+                    }
+                }
+                else
+                {
+                    moveToT.transform.position += new Vector3(speed, 0f, 0f);
+                    transform.position = Vector3.MoveTowards(transform.position, moveToT.transform.position, step);
+                    MoveMinotaur();
                     Debug.DrawRay(transform.position, Vector3.right * raySize, Color.green, debugDur);
                 }
             }
-            else
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                moveToT.transform.position += new Vector3(speed, 0f, 0f);
-                transform.position = Vector3.MoveTowards(transform.position, moveToT.transform.position, step);
-                MoveMinotaur();
-                Debug.DrawRay(transform.position, Vector3.right * raySize, Color.green, debugDur);
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            hit = Physics2D.Raycast(transform.position, Vector2.left, raySize, mask);
-            if (hit.collider != null)
-            {
-                if (hit.collider.tag == "barrier")
+                hit = Physics2D.Raycast(transform.position, Vector2.left, raySize, mask);
+                if (hit.collider != null)
                 {
+                    if (hit.collider.tag == "barrier")
+                    {
+                        Debug.DrawRay(transform.position, Vector3.left * raySize, Color.green, debugDur);
+                    }
+                }
+                else
+                {
+                    moveToT.transform.position += new Vector3(-speed, 0f, 0f);
+                    transform.position = Vector3.MoveTowards(transform.position, moveToT.transform.position, step);
+                    MoveMinotaur();
                     Debug.DrawRay(transform.position, Vector3.left * raySize, Color.green, debugDur);
                 }
             }
-            else
+            if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                moveToT.transform.position += new Vector3(-speed, 0f, 0f);
-                transform.position = Vector3.MoveTowards(transform.position, moveToT.transform.position, step);
-                MoveMinotaur();
-                Debug.DrawRay(transform.position, Vector3.left * raySize, Color.green, debugDur);
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            hit = Physics2D.Raycast(transform.position, Vector2.up, raySize, mask);
-            if (hit.collider != null)
-            {
-                if (hit.collider.tag == "barrier")
+                hit = Physics2D.Raycast(transform.position, Vector2.up, raySize, mask);
+                if (hit.collider != null)
                 {
+                    if (hit.collider.tag == "barrier")
+                    {
+                        Debug.DrawRay(transform.position, Vector3.up * raySize, Color.green, debugDur);
+                    }
+                }
+                else
+                {
+                    moveToT.transform.position += new Vector3(0f, speed, 0f);
+                    transform.position = Vector3.MoveTowards(transform.position, moveToT.transform.position, step);
+                    MoveMinotaur();
                     Debug.DrawRay(transform.position, Vector3.up * raySize, Color.green, debugDur);
                 }
             }
-            else
+            if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                moveToT.transform.position += new Vector3(0f, speed, 0f);
-                transform.position = Vector3.MoveTowards(transform.position, moveToT.transform.position, step);
-                MoveMinotaur();
-                Debug.DrawRay(transform.position, Vector3.up * raySize, Color.green, debugDur);
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            hit = Physics2D.Raycast(transform.position, Vector2.down, raySize, mask);
-            if (hit.collider != null)
-            {
-                if (hit.collider.tag == "barrier")
+                hit = Physics2D.Raycast(transform.position, Vector2.down, raySize, mask);
+                if (hit.collider != null)
                 {
+                    if (hit.collider.tag == "barrier")
+                    {
+                        Debug.DrawRay(transform.position, Vector3.down * raySize, Color.green, debugDur);
+                    }
+                }
+                else
+                {
+                    moveToT.transform.position += new Vector3(0f, -speed, 0f);
+                    transform.position = Vector3.MoveTowards(transform.position, moveToT.transform.position, step);
+                    MoveMinotaur();
                     Debug.DrawRay(transform.position, Vector3.down * raySize, Color.green, debugDur);
                 }
             }
-            else
+            if (Input.GetKeyDown(KeyCode.W))
             {
-                moveToT.transform.position += new Vector3(0f, -speed, 0f);
-                transform.position = Vector3.MoveTowards(transform.position, moveToT.transform.position, step);
                 MoveMinotaur();
-                Debug.DrawRay(transform.position, Vector3.down * raySize, Color.green, debugDur);
             }
-        }
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            MoveMinotaur();
-        }
 
+        }
     }
-    private void OnTriggerEnter2D(Collider2D other) {
-        if(other.gameObject.tag == "trophy"){
-            Debug.Log("Win");
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "trophy")
+        {
+            //If the win/lose badge is not already up. Calls the Win method on the gameManager
+            if (!gameManager.winBadgeUp)
+            {
+                StartCoroutine(gameManager.Win());
+            }
         }
     }
 }
